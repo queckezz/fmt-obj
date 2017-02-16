@@ -39,8 +39,33 @@ console.log(format({
     props: false
   }
 }))
-
 ```
+
+## API
+
+### `fmtObj(obj, depth = infinity, colors = defaultColorMap, offset = 2)`
+
+Prettifies `obj` given a `colors` map with optional `depth`.
+
+#### `depth`
+
+Objects deeper than `depth` will get collapsed and hide their sub properties.
+
+#### `colors`
+
+`fmt-obj` uses [`chalk`]() behind the scenes. Tweak it to your likes.
+
+```js
+// default color map
+{
+  punctuation: chalk.yellow,
+  property: chalk.green,
+  literal: chalk.magenta,
+  number: chalk.cyan,
+  string: chalk.bold
+}
+```
+
 
 ## Author
 

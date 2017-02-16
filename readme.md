@@ -43,20 +43,45 @@ console.log(format({
 
 ## API
 
-### `fmtObj(obj, depth = infinity, colors = defaultColorMap, offset = 2)`
+### `fmtObj(obj, depth = Infinity, colors = defaultColorMap, offset = 2)`
 
 Prettifies `obj` given a `colors` map with optional `depth`.
 
-#### `depth`
+#### `depth` (optional)
 
 Objects deeper than `depth` will get collapsed and hide their sub properties.
 
-#### `colors`
+#### `colors` (optional)
 
-`fmt-obj` uses [`chalk`]() behind the scenes. Tweak it to your likes.
+`fmt-obj` uses [`chalk`](https://github.com/chalk/chalk) behind the scenes.
+You can tweak the color mapping by the following tokens:
+
+* **punctuation** - The characters sorrounding your data: `:` and `"`
+* **literal** - Either `true`, `false` or `null`
+* **property**
+* **string**
+* **number**
+
+Here is an example of using a custom color map:
 
 ```js
-// default color map
+const format = require('fmt-obj')
+const chalk = require('chalk')
+
+const customFormat = (...args) => format(...args, {
+  punctuation: chalk.cyan,
+  property: chalk.yellow,
+  literal: chalk.blue,
+  number: chalk.green,
+  string: chalk.bold
+})
+
+console.log(customFormat({ hello: 1.0 }))
+```
+
+##### Default color map
+
+```js
 {
   punctuation: chalk.yellow,
   property: chalk.green,
@@ -66,6 +91,9 @@ Objects deeper than `depth` will get collapsed and hide their sub properties.
 }
 ```
 
+#### `offset` (optional)
+
+The amount of whitespace after the object gets displayed.
 
 ## Author
 

@@ -13,9 +13,9 @@ const isLiteral = (val) =>
 const formatFunction = (functionType, fn) =>
   `[${functionType} ${fn.displayName || fn.name || 'anonymous'}]`
 
-const formatValue = (colors, val) => {
+const formatValue = (formatter, val) => {
   if (typeof val === 'number') {
-    return colors.number(val)
+    return formatter.number(val)
   }
 
   if (typeof val === 'function') {
@@ -23,14 +23,14 @@ const formatValue = (colors, val) => {
   }
 
   if (isLiteral(val)) {
-    return colors.literal(String(val))
+    return formatter.literal(String(val))
   }
 
   if (isPlainObj(val)) {
     return tsml`
-      ${colors.punctuation('(')}
-      ${colors.string('collapsed')}
-      ${colors.punctuation(')')}
+      ${formatter.punctuation('(')}
+      ${formatter.string('collapsed')}
+      ${formatter.punctuation(')')}
     `
   }
 
@@ -41,33 +41,33 @@ const formatValue = (colors, val) => {
   }
 
   return tsml`
-    ${colors.punctuation('"')}
-    ${colors.string(val)}
-    ${colors.punctuation('"')}
+    ${formatter.punctuation('"')}
+    ${formatter.string(val)}
+    ${formatter.punctuation('"')}
   `
 }
 
 const ifElse = (bool, then, or) => bool ? then() : or()
 
-const formatWithDepth = (obj, depth, colors, offset) => {
+const formatWithDepth = (obj, depth, formatter, offset) => {
   const keys = Object.keys(obj)
-  const coloredKeys = keys.map((key) => colors.property(key))
+  const coloredKeys = keys.map((key) => formatter.property(key))
   const colon = ': '
 
   const parts = keys.map((key, i) => {
     const val = obj[key]
     return tsml`
       ${lpadAlign(coloredKeys[i], coloredKeys, offset)}
-      ${colors.punctuation(colon)}
+      ${formatter.punctuation(colon)}
       ${ifElse(
         depth.curr < depth.max && isPlainObj(val),
         () => format(
           val,
           { curr: depth.curr + 1, max: depth.max },
-          colors,
+          formatter,
           offset + longest(keys).length + colon.length
         ),
-        () => formatValue(colors, val)
+        () => formatValue(formatter, val)
       )}
     `
   })
@@ -86,8 +86,8 @@ const defaultFormatter = {
 const format = (
   obj,
   depth = Infinity,
-  colors = defaultFormatter,
+  formatter = defaultFormatter,
   offset = 2
-) => formatWithDepth(obj, { curr: 0, max: depth }, colors, offset)
+) => formatWithDepth(obj, { curr: 0, max: depth }, formatter, offset)
 
 module.exports = format

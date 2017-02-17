@@ -43,15 +43,15 @@ console.log(format({
 
 ## API
 
-### `fmtObj(obj, depth = Infinity, colors = defaultColorMap, offset = 2)`
+### `fmtObj(obj, depth = Infinity, formatter = defaultFormatter, offset = 2)`
 
-Prettifies `obj` given a `colors` map with optional `depth`.
+Prettifies `obj` given a `formatter` map with optional `depth`.
 
 #### `depth` (optional)
 
 Objects deeper than `depth` will get collapsed and hide their sub properties.
 
-#### `colors` (optional)
+#### `formatter` (optional)
 
 `fmt-obj` uses [`chalk`](https://github.com/chalk/chalk) behind the scenes.
 You can tweak the color mapping by the following tokens:

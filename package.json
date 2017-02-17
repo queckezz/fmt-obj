@@ -1,6 +1,6 @@
 {
   "name": "fmt-obj",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Prettifies any javascript object in your console",
   "scripts": {
     "release": "npm run lint && xyz -m X.Y.Z",

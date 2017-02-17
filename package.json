@@ -5,7 +5,8 @@
   "scripts": {
     "release": "npm run lint && xyz -m X.Y.Z",
     "lint": "standard",
-    "prepublish": "buble --yes dangerousTaggedTemplateString index.js > dist.js"
+    "prepublish": "buble --yes dangerousTaggedTemplateString index.js > dist.js",
+    "test": "ava"
   },
   "main": "dist.js",
   "keywords": [
@@ -28,6 +29,7 @@
     "tsml": "^1.0.1"
   },
   "devDependencies": {
+    "ava": "^0.18.1",
     "buble": "^0.15.2",
     "standard": "^8.6.0"
   }

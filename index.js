@@ -23,7 +23,7 @@ const formatValue = (colors, val) => {
   }
 
   if (isLiteral(val)) {
-    return colors.literal(val)
+    return colors.literal(String(val))
   }
 
   if (isPlainObj(val)) {
@@ -75,16 +75,18 @@ const formatWithDepth = (obj, depth, colors, offset) => {
   return '\n' + parts.join('\n')
 }
 
+const defaultFormatter = {
+  punctuation: chalk.yellow,
+  property: chalk.green,
+  literal: chalk.magenta,
+  number: chalk.cyan,
+  string: chalk.bold
+}
+
 const format = (
   obj,
   depth = Infinity,
-  colors = {
-    punctuation: chalk.yellow,
-    property: chalk.green,
-    literal: chalk.magenta,
-    number: chalk.cyan,
-    string: chalk.bold
-  },
+  colors = defaultFormatter,
   offset = 2
 ) => formatWithDepth(obj, { curr: 0, max: depth }, colors, offset)
 

@@ -7,24 +7,44 @@ const tsml = require('tsml')
 const isPlainObj = (o) =>
   o !== null && typeof o === 'object' && o.constructor === Object
 
+const isLiteral = (val) =>
+  typeof val === 'boolean' || val === null || val === undefined
+
+const formatFunction = (functionType, fn) =>
+  `[${functionType} ${fn.displayName || fn.name || 'anonymous'}]`
+
 const formatValue = (colors, val) => {
   if (typeof val === 'number') {
     return colors.number(val)
-  } else if (typeof val === 'boolean' || val === null) {
+  }
+
+  if (typeof val === 'function') {
+    return formatFunction('Function', val)
+  }
+
+  if (isLiteral(val)) {
     return colors.literal(val)
-  } else if (isPlainObj(val)) {
+  }
+
+  if (isPlainObj(val)) {
     return tsml`
       ${colors.punctuation('(')}
       ${colors.string('collapsed')}
       ${colors.punctuation(')')}
     `
-  } else {
-    return tsml`
-      ${colors.punctuation('"')}
-      ${colors.string(val)}
-      ${colors.punctuation('"')}
-    `
   }
+
+  const stringified = Object.prototype.toString.call(val)
+
+  if (stringified === '[object GeneratorFunction]') {
+    return formatFunction('GeneratorFunction', val)
+  }
+
+  return tsml`
+    ${colors.punctuation('"')}
+    ${colors.string(val)}
+    ${colors.punctuation('"')}
+  `
 }
 
 const ifElse = (bool, then, or) => bool ? then() : or()

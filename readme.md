@@ -1,5 +1,5 @@
 
-# `fmt-obj` [![NPM version][version-image]][version-url] [![Dependency Status][david-image]][david-url] [![License][license-image]][license-url] [![Js Standard Style][standard-image]][standard-url]
+# `fmt-obj` [![Build status][travis-image]][travis-url] [![NPM version][version-image]][version-url] [![Dependency Status][david-image]][david-url] [![License][license-image]][license-url] [![Js Standard Style][standard-image]][standard-url]
 
 Prettifies any javascript object in your console. Make it look awesome! :lipstick:
 
@@ -107,6 +107,9 @@ _(Because package discovery is hard)_
 Authored and maintained by Fabian Eichenberger with help from contributors ([list](https://github.com/queckezz/fmt-obj/contributors)).
 
 > GitHub [@queckezz](https://github.com/queckezz) · Twitter [@queckezz](https://twitter.com/queckezz)
+
+[travis-image]: https://img.shields.io/travis/queckezz/fmt-obj.svg?style=flat-square
+[travis-url]: https://travis-ci.org/queckezz/fmt-obj
 
 [version-image]: https://img.shields.io/npm/v/fmt-obj.svg?style=flat-square
 [version-url]: https://npmjs.org/package/fmt-obj

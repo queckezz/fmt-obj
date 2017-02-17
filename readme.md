@@ -57,7 +57,7 @@ Objects deeper than `depth` will get collapsed and hide their sub properties.
 You can tweak the color mapping by the following tokens:
 
 * **punctuation** - The characters sorrounding your data: `:` and `"`
-* **literal** - Either `true`, `false` or `null`
+* **literal** - Either `true`, `false`, `null` or `undefined`
 * **property**
 * **string**
 * **number**
@@ -94,6 +94,12 @@ console.log(customFormat({ hello: 1.0 }))
 #### `offset` (optional)
 
 The amount of whitespace after the object gets displayed.
+
+## Similar packages
+
+_(Because package discovery is hard)_
+
+* [`pretty-format`](https://github.com/facebook/jest/tree/master/packages/pretty-format) by @thejameskyle for additional ES6 type support (WeakMap, WeakSet, Symbol etc.) and more consistent output.
 
 ## Author
 

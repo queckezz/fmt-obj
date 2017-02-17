@@ -49,25 +49,10 @@ const formatValue = (colors, val) => {
 
 const ifElse = (bool, then, or) => bool ? then() : or()
 
-const format = (
-  obj,
-  depth = Infinity,
-  colors = {
-    punctuation: chalk.yellow,
-    property: chalk.green,
-    literal: chalk.magenta,
-    number: chalk.cyan,
-    string: chalk.bold
-  },
-  offset = 2
-) => {
+const formatWithDepth = (obj, depth, colors, offset) => {
   const keys = Object.keys(obj)
   const coloredKeys = keys.map((key) => colors.property(key))
   const colon = ': '
-
-  if (!isPlainObj(depth)) {
-    depth = { curr: 0, max: depth }
-  }
 
   const parts = keys.map((key, i) => {
     const val = obj[key]
@@ -89,5 +74,18 @@ const format = (
 
   return '\n' + parts.join('\n')
 }
+
+const format = (
+  obj,
+  depth = Infinity,
+  colors = {
+    punctuation: chalk.yellow,
+    property: chalk.green,
+    literal: chalk.magenta,
+    number: chalk.cyan,
+    string: chalk.bold
+  },
+  offset = 2
+) => formatWithDepth(obj, { curr: 0, max: depth }, colors, offset)
 
 module.exports = format

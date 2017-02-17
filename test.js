@@ -23,7 +23,7 @@ test('literals', (t) => {
 })
 
 test('strings', (t) => {
-   t.true(format({ val: 'hello world' }).includes('"hello world"'))
+  t.true(format({ val: 'hello world' }).includes('"hello world"'))
 })
 
 test('numbers', (t) => {

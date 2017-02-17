@@ -18,10 +18,6 @@ const formatValue = (formatter, val) => {
     return formatter.number(val)
   }
 
-  if (typeof val === 'function') {
-    return formatFunction('Function', val)
-  }
-
   if (isLiteral(val)) {
     return formatter.literal(String(val))
   }
@@ -35,6 +31,10 @@ const formatValue = (formatter, val) => {
   }
 
   const stringified = Object.prototype.toString.call(val)
+
+  if (stringified === '[object Function]') {
+    return formatFunction('Function', val)
+  }
 
   if (stringified === '[object GeneratorFunction]') {
     return formatFunction('GeneratorFunction', val)

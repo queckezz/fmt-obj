@@ -29,6 +29,7 @@ test('strings', (t) => {
 test('numbers', (t) => {
   t.true(format({ val: 12 }).includes('12'))
   t.true(format({ val: 12e10 }).includes('120000000000'))
+  t.true(format({ val: 9.99 }).includes('9.99'))
   t.true(format({ val: -200 }).includes('-200'))
   t.true(format({ val: Infinity }).includes('Infinity'))
 })

@@ -9,8 +9,8 @@ let tree = {
   b: a,
   dev: true,
   list: [
-    "hello",
-    "it's",
+    'hello',
+    'it\'s',
     { key: 'val', some: 'string' }
   ],
   alwaysTrue: () => true,

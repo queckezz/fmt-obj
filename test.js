@@ -6,6 +6,7 @@ const identity = (x) => x
 
 const identityFormatter = {
   punctuation: identity,
+  annotation: identity,
   property: identity,
   literal: identity,
   number: identity,

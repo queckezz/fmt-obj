@@ -58,6 +58,7 @@ You can tweak the color mapping by the following tokens:
 
 * **punctuation** - The characters sorrounding your data: `:` and `"`
 * **literal** - Either `true`, `false`, `null` or `undefined`
+* **annotation** - Type annotation for errors, functions and circular references like `[Function {name}]`
 * **property**
 * **string**
 * **number**

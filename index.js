@@ -10,8 +10,14 @@ const isPlainObj = (o) =>
 const isLiteral = (val) =>
   typeof val === 'boolean' || val === null || val === undefined
 
-const formatFunction = (functionType, fn) =>
-  `[${functionType} ${fn.displayName || fn.name || 'anonymous'}]`
+const annotate = (formatter, keyword, val) => tsml`
+  ${formatter.annotation(`[${keyword} `)}
+  ${formatter.string(val)}
+  ${formatter.annotation(']')}
+`
+
+const formatFunction = (formatter, functionType, fn) =>
+  annotate(formatter, functionType, fn.displayName || fn.name || 'anonymous')
 
 const formatCollapsedObject = (formatter, val) => tsml`
   ${formatter.punctuation('(')}
@@ -31,11 +37,11 @@ const formatValue = (formatter, val) => {
   const stringified = Object.prototype.toString.call(val)
 
   if (stringified === '[object Function]') {
-    return formatFunction('Function', val)
+    return formatFunction(formatter, 'Function', val)
   }
 
   if (stringified === '[object GeneratorFunction]') {
-    return formatFunction('GeneratorFunction', val)
+    return formatFunction(formatter, 'GeneratorFunction', val)
   }
 
   return tsml`
@@ -83,6 +89,7 @@ const formatWithDepth = (obj, depth, formatter, offset) => {
 
 const defaultFormatter = {
   punctuation: chalk.yellow,
+  annotation: chalk.gray,
   property: chalk.green,
   literal: chalk.magenta,
   number: chalk.cyan,

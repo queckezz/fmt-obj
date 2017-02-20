@@ -4,6 +4,8 @@ const longest = require('longest')
 const chalk = require('chalk')
 const tsml = require('tsml')
 
+const isCircular = (val) => /^~/.test(val)
+
 const isPlainObj = (o) =>
   o !== null && typeof o === 'object' && o.constructor === Object
 
@@ -18,6 +20,9 @@ const annotate = (formatter, keyword, val) => tsml`
 
 const formatFunction = (formatter, functionType, fn) =>
   annotate(formatter, functionType, fn.displayName || fn.name || 'anonymous')
+
+const formatCircular = (formatter, path) =>
+  annotate(formatter, 'References', '~' + path.join('.'))
 
 const formatCollapsedObject = (formatter, val) => tsml`
   ${formatter.punctuation('(')}
@@ -53,13 +58,37 @@ const formatValue = (formatter, val) => {
 
 const isIterableWithKeys = (val) => isPlainObj(val) || Array.isArray(val)
 
-const formatWithDepth = (obj, depth, formatter, offset) => {
+const createRefMap = () => {
+  let map = new Map()
+
+  return (path, val, replacer) => {
+    if (!val || typeof (val) !== 'object') {
+      return null
+    }
+
+    const ref = map.get(val)
+    if (ref) return replacer(ref)
+    map.set(val, path)
+    return null
+  }
+}
+
+const searchForRef = createRefMap()
+
+const formatWithDepth = (obj, formatter, { path, depth, offset }) => {
   const keys = Object.keys(obj)
   const coloredKeys = keys.map((key) => formatter.property(key))
   const colon = ': '
 
   const parts = keys.map((key, i) => {
+    const nextPath = path.concat([key])
     const val = obj[key]
+
+    const ref = searchForRef(
+      nextPath,
+      val,
+      (npath) => formatCircular(formatter, npath)
+    )
 
     let out = tsml`
       ${lpadAlign(coloredKeys[i], coloredKeys, offset)}
@@ -70,13 +99,16 @@ const formatWithDepth = (obj, depth, formatter, offset) => {
       return out + formatCollapsedObject(formatter, val)
     }
 
+    if (ref) {
+      return out + ref
+    }
+
     if (isIterableWithKeys(val)) {
-      out += formatWithDepth(
-        val,
-        { curr: depth.curr + 1, max: depth.max },
-        formatter,
-        offset + longest(keys).length + colon.length
-      )
+      out += formatWithDepth(val, formatter, {
+        offset: offset + longest(keys).length + colon.length,
+        depth: { curr: depth.curr + 1, max: depth.max },
+        path: nextPath
+      })
     } else {
       out += formatValue(formatter, val)
     }
@@ -101,6 +133,10 @@ const format = (
   depth = Infinity,
   formatter = defaultFormatter,
   offset = 2
-) => formatWithDepth(obj, { curr: 0, max: depth }, formatter, offset)
+) => formatWithDepth(obj, formatter, {
+  depth: { curr: 0, max: depth },
+  path: [],
+  offset
+})
 
 module.exports = format

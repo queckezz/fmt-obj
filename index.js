@@ -13,6 +13,12 @@ const isLiteral = (val) =>
 const formatFunction = (functionType, fn) =>
   `[${functionType} ${fn.displayName || fn.name || 'anonymous'}]`
 
+const formatCollapsedObject = (formatter, val) => tsml`
+  ${formatter.punctuation('(')}
+  ${formatter.string('collapsed')}
+  ${formatter.punctuation(')')}
+`
+
 const formatValue = (formatter, val) => {
   if (typeof val === 'number') {
     return formatter.number(val)
@@ -20,14 +26,6 @@ const formatValue = (formatter, val) => {
 
   if (isLiteral(val)) {
     return formatter.literal(String(val))
-  }
-
-  if (isPlainObj(val)) {
-    return tsml`
-      ${formatter.punctuation('(')}
-      ${formatter.string('collapsed')}
-      ${formatter.punctuation(')')}
-    `
   }
 
   const stringified = Object.prototype.toString.call(val)
@@ -62,7 +60,11 @@ const formatWithDepth = (obj, depth, formatter, offset) => {
       ${formatter.punctuation(colon)}
     `
 
-    if (depth.curr < depth.max && isIterableWithKeys(val)) {
+    if (depth.curr > depth.max) {
+      return out + formatCollapsedObject(formatter, val)
+    }
+
+    if (isIterableWithKeys(val)) {
       out += formatWithDepth(
         val,
         { curr: depth.curr + 1, max: depth.max },

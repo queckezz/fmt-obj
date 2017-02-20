@@ -71,9 +71,11 @@ const createRefMap = () => {
   }
 }
 
-const searchForRef = createRefMap()
-
-const formatWithDepth = (obj, formatter, { path, depth, offset }) => {
+const formatWithDepth = (
+  obj,
+  formatter,
+  { lookupRef, path, depth, offset }
+) => {
   const keys = Object.keys(obj)
   const coloredKeys = keys.map((key) => formatter.property(key))
   const colon = ': '
@@ -82,7 +84,7 @@ const formatWithDepth = (obj, formatter, { path, depth, offset }) => {
     const nextPath = path.concat([key])
     const val = obj[key]
 
-    const ref = searchForRef(
+    const ref = lookupRef(
       nextPath,
       val,
       (npath) => formatCircular(formatter, npath)
@@ -105,7 +107,8 @@ const formatWithDepth = (obj, formatter, { path, depth, offset }) => {
       out += formatWithDepth(val, formatter, {
         offset: offset + longest(keys).length + colon.length,
         depth: { curr: depth.curr + 1, max: depth.max },
-        path: nextPath
+        path: nextPath,
+        lookupRef
       })
     } else {
       out += formatValue(formatter, val)
@@ -133,6 +136,7 @@ const format = (
   offset = 2
 ) => formatWithDepth(obj, formatter, {
   depth: { curr: 0, max: depth },
+  lookupRef: createRefMap(),
   path: [],
   offset
 })

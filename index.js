@@ -47,7 +47,7 @@ const formatValue = (formatter, val) => {
   `
 }
 
-const ifElse = (bool, then, or) => bool ? then() : or()
+const isIterableWithKeys = (val) => isPlainObj(val) || Array.isArray(val)
 
 const formatWithDepth = (obj, depth, formatter, offset) => {
   const keys = Object.keys(obj)
@@ -56,20 +56,24 @@ const formatWithDepth = (obj, depth, formatter, offset) => {
 
   const parts = keys.map((key, i) => {
     const val = obj[key]
-    return tsml`
+
+    let out = tsml`
       ${lpadAlign(coloredKeys[i], coloredKeys, offset)}
       ${formatter.punctuation(colon)}
-      ${ifElse(
-        depth.curr < depth.max && isPlainObj(val),
-        () => format(
-          val,
-          { curr: depth.curr + 1, max: depth.max },
-          formatter,
-          offset + longest(keys).length + colon.length
-        ),
-        () => formatValue(formatter, val)
-      )}
     `
+
+    if (depth.curr < depth.max && isIterableWithKeys(val)) {
+      out += formatWithDepth(
+        val,
+        { curr: depth.curr + 1, max: depth.max },
+        formatter,
+        offset + longest(keys).length + colon.length
+      )
+    } else {
+      out += formatValue(formatter, val)
+    }
+
+    return out
   })
 
   return '\n' + parts.join('\n')

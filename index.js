@@ -4,8 +4,6 @@ const longest = require('longest')
 const chalk = require('chalk')
 const tsml = require('tsml')
 
-const isCircular = (val) => /^~/.test(val)
-
 const isPlainObj = (o) =>
   o !== null && typeof o === 'object' && o.constructor === Object
 

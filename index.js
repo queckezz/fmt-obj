@@ -19,7 +19,7 @@ const annotate = (formatter, keyword, val) => tsml`
 const formatFunction = (formatter, functionType, fn) =>
   annotate(formatter, functionType, fn.displayName || fn.name || 'anonymous')
 
-const formatCircular = (formatter, path) =>
+const formatRef = (formatter, path) =>
   annotate(formatter, 'References', '~' + path.join('.'))
 
 const formatCollapsedObject = (formatter, val) => tsml`
@@ -87,7 +87,7 @@ const formatWithDepth = (
     const ref = lookupRef(
       nextPath,
       val,
-      (npath) => formatCircular(formatter, npath)
+      (npath) => formatRef(formatter, npath)
     )
 
     let out = tsml`

@@ -1,8 +1,12 @@
 
 const format = require('./')
 
-console.log(format({
+const a = { a: 1 }
+
+let tree = {
   message: 'hello world',
+  a,
+  b: a,
   dev: true,
   list: [
     'hello',
@@ -17,4 +21,8 @@ console.log(format({
     some: undefined,
     props: false
   }
-}))
+}
+
+tree.body.circular = tree.body
+
+console.log(format(tree))

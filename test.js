@@ -63,3 +63,27 @@ test('depth', (t) => {
   t.true(fmtOneLevel.includes('b: true'))
   t.false(fmtOneLevel.includes('d: true'))
 })
+
+test('references', (t) => {
+  const c = { prop: true }
+  const actual = {
+    a: c,
+    b: c
+  }
+
+  const fmt = format(actual)
+  t.true(fmt.includes('References ~a'))
+})
+
+test('circular', (t) => {
+  let actual = {
+    body: {
+      a: true
+    }
+  }
+
+  actual.body.b = actual.body
+
+  const fmt = format(actual)
+  t.true(fmt.includes('References ~body'))
+})

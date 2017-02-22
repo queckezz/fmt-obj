@@ -71,6 +71,7 @@ const chalk = require('chalk')
 
 const customFormat = (...args) => format(...args, {
   punctuation: chalk.cyan,
+  annotation: chalk.red,
   property: chalk.yellow,
   literal: chalk.blue,
   number: chalk.green,
@@ -85,6 +86,7 @@ console.log(customFormat({ hello: 1.0 }))
 ```js
 {
   punctuation: chalk.yellow,
+  annotation: chalk.gray,
   property: chalk.green,
   literal: chalk.magenta,
   number: chalk.cyan,

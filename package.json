@@ -2,26 +2,15 @@
   "name": "fmt-obj",
   "version": "1.2.0",
   "description": "Prettifies any javascript object in your console",
-  "scripts": {
-    "release": "npm run lint && xyz -m X.Y.Z",
-    "lint": "standard",
-    "prepublish": "buble --yes dangerousTaggedTemplateString index.js > dist.js",
-    "test": "ava"
-  },
   "main": "dist.js",
-  "keywords": [
-    "format",
-    "pretty",
-    "object",
-    "prettify",
-    "fmt"
-  ],
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/queckezz/fmt-obj"
-  },
+  "repository": "queckezz/fmt-obj",
   "author": "queckezz <fabian.eichenberger@gmail.com>",
+  "scripts": {
+    "precommit": "npm test",
+    "prepublish": "buble --yes dangerousTaggedTemplateString index.js > dist.js",
+    "test": "standard && ava"
+  },
   "dependencies": {
     "chalk": "^1.1.3",
     "longest": "^1.0.1",
@@ -31,6 +20,14 @@
   "devDependencies": {
     "ava": "^0.18.1",
     "buble": "^0.15.2",
+    "husky": "^0.13.1",
     "standard": "^8.6.0"
-  }
+  },
+  "keywords": [
+    "format",
+    "pretty",
+    "object",
+    "prettify",
+    "fmt"
+  ]
 }

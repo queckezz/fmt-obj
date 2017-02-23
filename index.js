@@ -22,7 +22,7 @@ const formatFunction = (formatter, functionType, fn) =>
 const formatRef = (formatter, path) =>
   annotate(formatter, 'References', '~' + path.join('.'))
 
-const formatCollapsedObject = (formatter, val) => tsml`
+const formatCollapsedObject = (formatter) => tsml`
   ${formatter.punctuation('(')}
   ${formatter.string('collapsed')}
   ${formatter.punctuation(')')}
@@ -90,13 +90,13 @@ const formatWithDepth = (
       (npath) => formatRef(formatter, npath)
     )
 
-    let out = tsml`
+    const out = tsml`
       ${lpadAlign(coloredKeys[i], coloredKeys, offset)}
       ${formatter.punctuation(colon)}
     `
 
     if (depth.curr > depth.max) {
-      return out + formatCollapsedObject(formatter, val)
+      return out + formatCollapsedObject(formatter)
     }
 
     if (ref) {
@@ -104,17 +104,15 @@ const formatWithDepth = (
     }
 
     if (isIterableWithKeys(val)) {
-      out += formatWithDepth(val, formatter, {
+      return out + formatWithDepth(val, formatter, {
         offset: offset + longest(keys).length + colon.length,
         depth: { curr: depth.curr + 1, max: depth.max },
         path: nextPath,
         lookupRef
       })
     } else {
-      out += formatValue(formatter, val)
+      return out + formatValue(formatter, val)
     }
-
-    return out
   })
 
   return '\n' + parts.join('\n')

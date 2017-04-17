@@ -103,6 +103,7 @@ The amount of whitespace after the object gets displayed.
 _(Because package discovery is hard)_
 
 * [`pretty-format`](https://github.com/facebook/jest/tree/master/packages/pretty-format) by @thejameskyle for additional ES6 type support (WeakMap, WeakSet, Symbol etc.) and more consistent output.
+* [`fmt-obj-cli`](https://github.com/Kikobeats/fmt-obj-cli) using fmt-obj from your CLI.
 
 ## Author
 

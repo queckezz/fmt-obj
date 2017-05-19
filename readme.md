@@ -1,7 +1,7 @@
 
 # `fmt-obj` [![Build status][travis-image]][travis-url] [![NPM version][version-image]][version-url] [![Dependency Status][david-image]][david-url] [![License][license-image]][license-url] [![Js Standard Style][standard-image]][standard-url]
 
-Prettifies any javascript object in your console. Make it look awesome! :lipstick:
+:lipstick: Prettifies any javascript object in your console. Make it look awesome!
 
 **Screenshot**
 
@@ -10,6 +10,14 @@ Prettifies any javascript object in your console. Make it look awesome! :lipstic
 </p>
 
 <sub><a href='./example.js'>View Example</a></sub>
+
+> Also check out the [`CLI version`](https://github.com/Kikobeats/fmt-obj-cli) made by [@Kikobeats](https://github.com/Kikobeats)
+
+## Features
+
+- Circular reference support :sparkles:
+- Allows for custom formatting
+- Supports any arbitrary javascript token (functions, strings, numbers, arrays, you name it!)
 
 ## Installation
 
@@ -43,18 +51,33 @@ console.log(format({
 
 ## API
 
-### `fmtObj(obj, depth = Infinity, formatter = defaultFormatter, offset = 2)`
+### `format(obj, depth = Infinity)`
 
-Prettifies `obj` given a `formatter` map with optional `depth`.
+Prettifies `obj` with optional `depth`.
+
+#### `obj`
+
+Any arbitrary javascript object.
 
 #### `depth` (optional)
 
-Objects deeper than `depth` will get collapsed and hide their sub properties.
+Colapses all properties deeper than specified by `depth`.
 
-#### `formatter` (optional)
+### `createFormatter({ offset = 2, formatter = identityFormatter })`
 
-`fmt-obj` uses [`chalk`](https://github.com/chalk/chalk) behind the scenes.
-You can tweak the color mapping by the following tokens:
+Create a custom format function if you need more control of *how* you want to format the tokens.
+
+#### `opts.formatter` (optional)
+
+`fmt-obj` uses [`chalk`](https://github.com/chalk/chalk) for it's default format function. A formatter is mostly used for colors but can be used to manipulate anything.
+
+**Example with rounding numbers**
+```js
+const format = createFormatter({ number: Math.round })
+format({ num: 12.49 }) // -> num: 12
+```
+
+The following tokens are available:
 
 * **punctuation** - The characters sorrounding your data: `:` and `"`
 * **literal** - Either `true`, `false`, `null` or `undefined`
@@ -63,47 +86,32 @@ You can tweak the color mapping by the following tokens:
 * **string**
 * **number**
 
-Here is an example of using a custom color map:
-
 ```js
-const format = require('fmt-obj')
-const chalk = require('chalk')
+const { createFormatter } = require('fmt-obj')
 
-const customFormat = (...args) => format(...args, {
-  punctuation: chalk.cyan,
-  annotation: chalk.red,
-  property: chalk.yellow,
-  literal: chalk.blue,
-  number: chalk.green,
-  string: chalk.bold
+const format = createFormatter({
+  offset: 4,
+
+  formatter: {
+    punctuation: chalk.cyan,
+    annotation: chalk.red,
+    property: chalk.yellow,
+    literal: chalk.blue,
+    number: chalk.green,
+    string: chalk.bold
+  }
 })
-
-console.log(customFormat({ hello: 1.0 }))
 ```
 
-##### Default color map
+#### `opts.offset` (optional)
 
-```js
-{
-  punctuation: chalk.yellow,
-  annotation: chalk.gray,
-  property: chalk.green,
-  literal: chalk.magenta,
-  number: chalk.cyan,
-  string: chalk.bold
-}
-```
-
-#### `offset` (optional)
-
-The amount of whitespace after the object gets displayed.
+The amount of left whitespace between the property key and all of it's sub-properties.
 
 ## Similar packages
 
 _(Because package discovery is hard)_
 
 * [`pretty-format`](https://github.com/facebook/jest/tree/master/packages/pretty-format) by @thejameskyle for additional ES6 type support (WeakMap, WeakSet, Symbol etc.) and more consistent output.
-* [`fmt-obj-cli`](https://github.com/Kikobeats/fmt-obj-cli) using fmt-obj from your CLI.
 
 ## Author
 

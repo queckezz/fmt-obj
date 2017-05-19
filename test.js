@@ -1,20 +1,19 @@
 
-const _format = require('./')
+const { createFormatter } = require('./')
 const test = require('ava')
 
-const identity = (x) => x
+const format = createFormatter()
 
-const identityFormatter = {
-  punctuation: identity,
-  annotation: identity,
-  property: identity,
-  literal: identity,
-  number: identity,
-  string: identity
-}
+test('merges with default formatter', (t) => {
+  const customFormat = createFormatter({
+    formatter: { number: (n) => -1 }
+  })
 
-const format = (obj, depth, offset) =>
-  _format(obj, depth, identityFormatter, offset)
+  const out = customFormat({ str: 'str', val: 10 })
+  t.true(out.includes('-1'))
+  t.false(out.includes('10'))
+  t.true(out.includes('str'))
+})
 
 test('literals', (t) => {
   t.true(format({ val: true }).includes('true'))

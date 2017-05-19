@@ -118,25 +118,42 @@ const formatWithDepth = (
   return '\n' + parts.join('\n')
 }
 
-const defaultFormatter = {
-  punctuation: chalk.yellow,
-  annotation: chalk.gray,
-  property: chalk.green,
-  literal: chalk.magenta,
-  number: chalk.cyan,
-  string: chalk.bold
+const identityFormatter = [
+  'punctuation',
+  'annotation',
+  'property',
+  'literal',
+  'number',
+  'string'
+].reduce(
+  (acc, prop) => Object.assign({}, acc, { [prop]: (x) => x }),
+  {}
+)
+
+const createFormatter = (opts = {}) => {
+  const offset = opts.offset || 2
+  const formatter = Object.assign({}, identityFormatter, opts.formatter)
+
+  return (obj, depth = Infinity) => {
+    return formatWithDepth(obj, formatter, {
+      depth: { curr: 0, max: depth },
+      lookupRef: createRefMap(),
+      path: [],
+      offset
+    })
+  }
 }
 
-const format = (
-  obj,
-  depth = Infinity,
-  formatter = defaultFormatter,
-  offset = 2
-) => formatWithDepth(obj, formatter, {
-  depth: { curr: 0, max: depth },
-  lookupRef: createRefMap(),
-  path: [],
-  offset
+const format = createFormatter({
+  formatter: {
+    punctuation: chalk.yellow,
+    annotation: chalk.gray,
+    property: chalk.green,
+    literal: chalk.magenta,
+    number: chalk.cyan,
+    string: chalk.bold
+  }
 })
 
 module.exports = format
+module.exports.createFormatter = createFormatter

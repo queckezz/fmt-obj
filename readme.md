@@ -86,6 +86,7 @@ The following tokens are available:
 * **string**
 * **number**
 
+**Example with a custom color map**
 ```js
 const { createFormatter } = require('fmt-obj')
 
